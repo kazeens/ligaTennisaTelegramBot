@@ -1,0 +1,32 @@
+version: '2.3'
+
+services:
+  api_base: 
+    image: api
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    environment:
+      HOST: localhost
+      PORT: 3000
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+    volumes:
+      - ./:/usr/src/app/
+  mongodb_base:
+    image: mongo:4.0
+    mem_limit: 1536M
+    restart: unless-stopped
+    command: --wiredTigerCacheSizeGB 1
+    logging:
+      driver: none
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo 127.0.0.1:27017/test --quiet
+      start_period: 2s
+      interval: 2s
+      timeout: 2s
+      retries: 100
+    volumes:
+      - type: volume
+        source: mongodb
+        target: /data/db

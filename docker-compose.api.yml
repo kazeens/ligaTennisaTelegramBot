@@ -1,0 +1,21 @@
+version: '2.3'
+
+services:
+  api:
+    extends:
+      file: docker-compose.base.yml
+      service: api_base
+    restart: unless-stopped
+    networks:
+      - default_network
+    ports:
+      - 3000:3000
+      - 10001:10001 # debug port
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    command: ["npm", "run", "start"]
+
+networks:
+  default_network:
+    external: true

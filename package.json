@@ -1,21 +1,30 @@
 {
   "name": "ligatennisabot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Telegram bot for ligaTennisa players",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec node --inspect=0.0.0.0:10000 ./src/app.js"
+    "start": "nodemon --exec node --inspect=0.0.0.0:10001 ./src/app.js"
   },
-  "author": "",
+  "author": "Mikalai Yurkveich",
   "license": "ISC",
   "dependencies": {
+    "app-module-path": "2.2.0",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "express": "4.17.1",
     "helmet": "4.2.0",
+    "lodash": "4.17.20",
     "mongodb": "3.6.3",
+    "mongoose": "5.11.8",
+    "mongoose-paranoid-plugin": "1.1.2",
+    "morgan": "1.10.0",
+    "node-cron": "2.0.3",
     "nodemon": "2.0.6",
-    "telegraf": "3.38.0"
+    "shortid": "2.2.16",
+    "telegraf": "3.38.0",
+    "vk-io": "4.1.2",
+    "winston": "3.3.3"
   }
 }

@@ -1,9 +1,7 @@
 const { Telegraf } = require('telegraf')
 
-const config = require('../../config');
-const controller = require('./controller');
-console.log('controller', controller)
-
+const config = require('src/config');
+const controller = require('src/clients/telegram-bot/controller');
 
 function configureTelegramBot() {
   const bot = new Telegraf(config.telegramBotToken);
@@ -15,4 +13,5 @@ function configureTelegramBot() {
   bot.launch()
 }
 
-module.exports = configureTelegramBot();
+module.exports.configure = configureTelegramBot;
+

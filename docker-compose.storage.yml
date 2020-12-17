@@ -1,0 +1,19 @@
+version: '2.3'
+
+services:
+  mongodb:
+    extends:
+      file: docker-compose.base.yml
+      service: mongodb_base
+    ports:
+      - 27017:27017
+    networks:
+      - default_network
+
+volumes:
+  mongodb:
+    external: true
+
+networks:
+  default_network:
+    external: true

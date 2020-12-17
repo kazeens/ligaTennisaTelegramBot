@@ -1,6 +1,6 @@
-'use strict';
+const envVariables = require('src/config/env/variables');
+const getConfigForEnvironment = require('src/config/env/get-config');
 
-module.exports = {
-  telegramBotToken: '1450613929:AAH7M2EXd0voUTsVhR1XzBI0NK4GydNy_4s',
-  port: 3000,
-};
+const config = getConfigForEnvironment(envVariables.env);
+
+module.exports = config;
