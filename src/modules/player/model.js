@@ -12,8 +12,8 @@ const  mongooseSchema = new mongoose.Schema(
     {
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        telegramUsername: { type: String },
-        isAdmin: { type: Boolean }
+        telegramId: { type: String },
+        isAdmin: { type: Boolean, default: false }
     },
     {
         versionKey: 'version',

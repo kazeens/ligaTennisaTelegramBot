@@ -15,7 +15,6 @@ class VKService {
         let response;
         try {
           response = await that.vk.api.wall.get({owner_id: -that.groupId}); 
-          console.log('response', response)
         } catch (error) {
           console.log('error getPosts', error)
         }
@@ -26,7 +25,6 @@ class VKService {
         let response;
 
         try {
-          debugger
           response = await that.vk.api.board.getTopics({
             group_id: that.groupId,
             order,

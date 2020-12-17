@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 
 const telegramBotClient = require('src/clients/telegram-bot');
-const winston = require('src/utils/logger')
+const logger = require('src/utils/logger')
 
 const config = require('src/config');
 const jobs = require('src/jobs/vk'); // rethig in the future the structure
@@ -27,16 +27,11 @@ app.listen(config.port, () => {
   .substr(0, 19)
   .replace(/T/, ' at ');
 
-  winston.info('*********************************************************');
-  winston.info('Liga tennisa bot');
-  winston.info(`Server is up, listening on port ${config.port}`);
-  winston.info(`Started on ${nowStr} UTC`);
-  winston.info('*********************************************************');
+  logger.info('*********************************************************');
+  logger.info('Liga tennisa bot');
+  logger.info(`Server is up, listening on port ${config.port}`);
+  logger.info(`Started on ${nowStr} UTC`);
+  logger.info('*********************************************************');
 });
-
-/**
- * To do
- * 1. Normal logger
- */
 
 module.exports = app;

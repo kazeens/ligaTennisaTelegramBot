@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const mongooseParanoidPlugin = require('mongoose-paranoid-plugin');
-const winston = require('winston');
+const logger = require('src/utils/logger');
 
 const { database: { mongodb: mongoDbConfig }} = require('src/config');
 
@@ -13,34 +13,34 @@ const { getMongoConnectionString } = require('src/config/utils');
 
 const db =  (function () {
     const connectionString = getMongoConnectionString(mongoDbConfig);
-    winston.log('connectionString', connectionString)
+    logger.log('connectionString', connectionString)
     const odm = mongoose.createConnection(connectionString);
 
     mongoose.connection.on('error', (err) => {
-        winston.info('Mongoose level error');
-        winston.error(err);
+        logger.info('Mongoose level error');
+        logger.error(err);
     });
 
-    odm.on('connecting', () => winston.info(`MongoDB connecting to ${odm.host}:${odm.port}`));
+    odm.on('connecting', () => logger.info(`MongoDB connecting to ${odm.host}:${odm.port}`));
 
     odm.on('error', (err) => {
-      winston.error(err);
+      logger.error(err);
     });
 
     odm.on('close', (err) => {
-        winston.info('MongoDB connection closed');
-        winston.error(err);
+        logger.info('MongoDB connection closed');
+        logger.error(err);
     });
 
-    odm.on('connected', () => winston.info(`MongoDB connected successfully to ${odm.host}:${odm.port}`));
+    odm.on('connected', () => logger.info(`MongoDB connected successfully to ${odm.host}:${odm.port}`));
 
-    odm.once('open', () => winston.info(`MongoDB opened successfully on ${odm.host}:${odm.port}`));
+    odm.once('open', () => logger.info(`MongoDB opened successfully on ${odm.host}:${odm.port}`));
 
-    odm.on('reconnected', () => winston.info(`MongoDB reconnected to ${odm.host}:${odm.port}.`));
+    odm.on('reconnected', () => logger.info(`MongoDB reconnected to ${odm.host}:${odm.port}.`));
 
-    odm.on('timeout', () => winston.warn(`MongoDB timeout on ${odm.host}:${odm.port}.`));
+    odm.on('timeout', () => logger.warn(`MongoDB timeout on ${odm.host}:${odm.port}.`));
 
-    odm.on('disconnected', () => winston.warn(`MongoDB connection lost to ${odm.host}:${odm.port}.`));
+    odm.on('disconnected', () => logger.warn(`MongoDB connection lost to ${odm.host}:${odm.port}.`));
 
     // apply global plugins
     mongoose.plugin(shortIdPlugin);

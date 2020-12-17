@@ -1,11 +1,12 @@
 
 const { Markup } = require('telegraf');
 
-const { startMessage, tournament } = require('src/clients/telegram-bot/constants');
+const { startMessage, tournament, signUpMessage } = require('src/clients/telegram-bot/constants');
 
 module.exports = {
   handleHelpMessage,
   handleTournaments,
+  handlePlayerSignUpRequest,
 };
 
 function handleHelpMessage(ctx) {
@@ -24,6 +25,6 @@ function handleTournaments(ctx) {
   });
 };
 
-function handleTournamentCreation(ctx) {
-  
+function handlePlayerSignUpRequest(ctx) {
+  ctx.reply(signUpMessage);
 }
