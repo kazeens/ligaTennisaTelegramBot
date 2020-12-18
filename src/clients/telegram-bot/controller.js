@@ -34,7 +34,6 @@ function handleHelpMessage(ctx) {
 }
 
 function handleTournaments(ctx) {
-  console.log('ctx.session.player', ctx.session.player);
   if(_.isEmpty(ctx.session.player)) {
     const tournamentsReply = tournament.pickQuestionOptions.join('\n');
     const replyMessage = `${tournamentsReply}\n${tournament.recommendationToParticipate}`;

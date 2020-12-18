@@ -66,7 +66,6 @@ async function textValidationMiddleware(ctx, next) {
   if(!command) {
     return ctx.reply(wrongTextMessage);
   }
-  console.log('commandValue', commandValue)
 
   const validationHanlder = validation[commandValue];
   

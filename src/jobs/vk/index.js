@@ -1,4 +1,3 @@
-const { VK } = require('vk-io');
 const cron = require('node-cron');
 
 const config = require('src/config');
@@ -27,12 +26,12 @@ const VKApiService = require('src/services/vk');
 module.exports.init = function () {
   cron.schedule('*/5 * * * * *', async function () {
     let response;
-    // try {
-    //   response = await VKApiService.group.getTopics(46694885);
-    //   console.log('response', response)
-    // } catch (error) {
-    //   console.log('error', error)
+    try {
+      response = await VKApiService.group.getTopics();
+      console.log('response', response)
+    } catch (error) {
+      console.log('error', error)
       
-    // }
+    }
   });
 };

@@ -31,7 +31,6 @@ function configureTelegramBot() {
 
   bot.command(commands.TOURNAMENTS, controller.handleTournaments); // Y
 
-  console.log('controller.handlePlayerSignUp', controller.handlePlayerSignUp);
   bot.command(commands.SIGN_UP, controller.handlePlayerSignUp); // Y
   // bot.command(commands.SIGN_UP_EDIT, controller.handlePlayerSignUpEdit); // Y
 
@@ -45,7 +44,6 @@ function configureTelegramBot() {
 
   bot.use(mv.textValidationMiddleware);
 
-  console.log('handleTextInput', controller.handleTextInput);
   bot.on(replyTypes.text, controller.handleTextInput);
 
   bot.launch();
