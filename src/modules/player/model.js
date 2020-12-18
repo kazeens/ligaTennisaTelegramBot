@@ -7,12 +7,11 @@ const { revertId } = require('src/utils/mongo.helper');
 const modelName = 'Players';
 const collectionName = 'players';
 
-
 const  mongooseSchema = new mongoose.Schema(
     {
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        telegramId: { type: String },
+        telegramId: { type: Number },
         isAdmin: { type: Boolean, default: false }
     },
     {
@@ -27,6 +26,6 @@ const  mongooseSchema = new mongoose.Schema(
 
 // mongooseSchema.index({ firstName: 1, name: 1 }, { unique: true });
 
-const Tournaments = db.model(modelName, mongooseSchema, collectionName);
+const Player = db.model(modelName, mongooseSchema, collectionName);
 
-module.exports = Tournaments;
+module.exports = Player;

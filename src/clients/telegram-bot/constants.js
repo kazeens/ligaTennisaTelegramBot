@@ -1,9 +1,8 @@
 
-
 const replyTypes = {
   botCommand: 'bot_command',
   text: 'text',
-  unknown: 'unknown'
+  unknown: 'unknown' // Remove
 };
 
 const propertyByReplyType = {
@@ -23,8 +22,21 @@ const telegraf = {
     },
 };
 
+const commands = {
+  HELP: 'help',
+  TOURNAMENTS: 'tournaments',
+  SIGN_UP: 'signUp',
+  SIGN_UP_EDIT: 'signUpEdit',
+  SUBSCRIBE_SCHEDULE: 'subscribeSchedule',
+  UNSUBSCRIBE_SCHEDULE: 'unsubscribeSchedule',
+  SEE_RESULTS: 'seeResults',
+  REPORT_RESULTS: 'reportResults',
+}
+
 module.exports = {
   replyTypes,
   allowedReplyTypes,
+  propertyByReplyType,
   telegraf,
+  commands,
 }
