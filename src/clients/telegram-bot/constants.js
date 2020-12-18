@@ -1,19 +1,30 @@
 
+
+const replyTypes = {
+  botCommand: 'bot_command',
+  text: 'text',
+  unknown: 'unknown'
+};
+
+const propertyByReplyType = {
+  [replyTypes.botCommand]: 'text', 
+  [replyTypes.text]: 'text', 
+};
+
+const allowedReplyTypes = [
+  replyTypes.botCommand,
+  replyTypes.text,
+];
+
+const telegraf = {
+    sessionSetup: {
+      sessionCollectionName: 'sessions',
+      sessionPropertyName: 'session',
+    },
+};
+
 module.exports = {
-  startMessage: `
-Привет! Я бот Лиги Тенниса.
-Я помогаю игрокам лиги организовывать свое участие в матчах и не только.
-
-Чтобы узнать список актуальных турниров напиши /tournaments
-
-Если хочешь принимать участие в турнирах сейчас и в дальнейшем -  представься пожалуйста, воспользовавшись командой /signup
-  `,
-  tournament: {
-    pickQuestion: 'Выбери пожалуйста турнир, в котором ты хочешь принять участие',
-    pickQuestionOptions: [
-      'Challenger 2012',
-      'Masters 2077',
-    ]
-  },
-  signUpMessage: 'Введи пожалуйста свою Фамилию и Имя (через пробел)',
+  replyTypes,
+  allowedReplyTypes,
+  telegraf,
 }
