@@ -34,6 +34,8 @@ const russianMonthToNumberMapper = {
   'декабря': 11,
 };
 
+const beforeDateSeparators = ['ДАТЫ:', 'СТАРТ:'];
+
 const russianMonth = Object.keys(russianMonthToNumberMapper);
 
 module.exports = {
@@ -41,4 +43,5 @@ module.exports = {
   tournamentsTypes,
   russianMonthToNumberMapper,
   russianMonth,
+  beforeDateSeparators,
 }
