@@ -1,43 +1,51 @@
-const Tournaments = require('src/modules/tournaments/model');
-// const { buildQuery } = require('src/modules/corporate-package/query.builder');
-
+const Tournament = require('src/modules/tournament/model');
+const { buildQuery } = require('src/modules/tournament/query.builder');
 
 module.exports = {
     getAll,
     findOne,
     create,
     update,
+    addParticipant,
+    removeParticipant,
 };
 
-function buildQuery() {
-  return {};
-}
-
 function getAll(query) {
-    return Tournaments
+    console.log(buildQuery(query));
+    return Tournament
         .find(buildQuery(query))
-        .sort({ name: 1 })
         .then(data => data.map(cleanUp));
 }
 
 function findOne(query) {
-    return Tournaments
+    return Tournament
         .findOne(buildQuery(query))
         .then(cleanUp);
 }
 
 function create(data) {
-    const Tournaments = new Tournaments(data);
-
-    return Tournaments
+    const tournament = new Tournament(data);
+    return tournament
         .save()
         .then(cleanUp);
 }
 
 function update(id, data) {
-    return Tournaments
-        .updateOne(buildQuery({ id }), data)
+    return Tournament
+        .findOneAndUpdate(buildQuery({ id }), data)
         .then(() => findOne(buildQuery({ id }), scope));
+}
+
+function addParticipant(query, player) {
+    return Tournament
+        .update(buildQuery(query), { $push: { participants: player }})
+        .then(() => findOne(buildQuery(query)));
+}
+
+function removeParticipant(query, playerId) {
+    return Tournament
+        .update(buildQuery(query), { $pull: { participants: {id: playerId }}})
+        .then(() => findOne(buildQuery(query)));
 }
 
 function cleanUp(data) {

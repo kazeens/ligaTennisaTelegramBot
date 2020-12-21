@@ -4,6 +4,7 @@ const { buildQuery } = require('src/modules/player/query.builder');
 module.exports = {
   findOne,
   create,
+  update,
 }
 
 function findOne(query) {
@@ -20,6 +21,11 @@ function create(data) {
     .then(cleanUp);
 }
 
+function update(query, data) {
+  return Player
+      .findOneAndUpdate(buildQuery(query), data)
+      .then(() => findOne(buildQuery(query)));
+}
 
 function cleanUp(player) {
   if (!player) {

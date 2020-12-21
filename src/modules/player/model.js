@@ -12,6 +12,7 @@ const  mongooseSchema = new mongoose.Schema(
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         telegramId: { type: Number },
+        isSubscribedToPersonalSchedule: { type: Boolean, default: false },
         isAdmin: { type: Boolean, default: false }
     },
     {

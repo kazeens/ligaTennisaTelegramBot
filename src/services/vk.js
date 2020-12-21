@@ -53,6 +53,21 @@ class VKService {
 
         return response;
       },
+      async removeComment(topicId, commentId) {
+        let response;
+
+        try {
+          response = await that.vk.api.board.deleteComment({
+            group_id: that.groupId,
+            topic_id: topicId,
+            comment_id: commentId,
+          })
+        } catch (error) {
+          console.log('error addComment', error)
+        }
+
+        return response;
+      },
       async getComments(topicId) {
         const commentsDefaultMaxAmount = 100;
         const commentsDefaultSorting = 'asc';

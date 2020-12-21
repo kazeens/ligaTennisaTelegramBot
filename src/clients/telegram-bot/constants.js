@@ -25,13 +25,18 @@ const telegraf = {
 const commands = {
   HELP: 'help',
   TOURNAMENTS: 'tournaments',
-  SIGN_UP: 'signUp',
-  SIGN_UP_EDIT: 'signUpEdit',
-  SUBSCRIBE_SCHEDULE: 'subscribeSchedule',
-  UNSUBSCRIBE_SCHEDULE: 'unsubscribeSchedule',
-  SEE_RESULTS: 'seeResults',
-  REPORT_RESULTS: 'reportResults',
+  PLAY_TOURNAMENT: 'play_tournament',
+  EXIT_TOURNAMENT: 'exit_tournament',
+  SIGN_UP: 'sign_up',
+  SIGN_UP_EDIT: 'sign_up_edit',
+  SUBSCRIBE_SCHEDULE: 'subscribe_schedule',
+  UNSUBSCRIBE_SCHEDULE: 'unsubscribe_schedule',
+  SEE_RESULTS: 'seeResults', // Под вопросом
+  REPORT_RESULTS: 'report_results',
 }
+
+const tournamentDateLabelFormat = 'Do MMMM (dddd)';
+const tournamentDayLableFormat = 'dddd'
 
 module.exports = {
   replyTypes,
@@ -39,4 +44,6 @@ module.exports = {
   propertyByReplyType,
   telegraf,
   commands,
+  tournamentDateLabelFormat,
+  tournamentDayLableFormat,
 }

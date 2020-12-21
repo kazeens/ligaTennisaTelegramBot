@@ -5,7 +5,7 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 
-const telegramBotClient = require('src/clients/telegram-bot');
+const telegramBot = require('src/clients/telegram-bot');
 const logger = require('src/utils/logger')
 
 const config = require('src/config');
@@ -17,7 +17,7 @@ app.use(express.static('src/static'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-telegramBotClient.configure();
+telegramBot.configure();
 jobs.init();
 
 app.listen(config.port, () => {

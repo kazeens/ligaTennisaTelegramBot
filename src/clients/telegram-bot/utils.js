@@ -4,6 +4,7 @@ const { replyTypes } = require('src/clients/telegram-bot/constants');
 
 module.exports = {
   getMessageType,
+  getPlayerName,
 }
 
 function getMessageType(message) {
@@ -18,4 +19,8 @@ function getMessageType(message) {
   }
 
   return replyTypes.unknown;
+}
+
+function getPlayerName(player) {
+  return `${player.firstName} ${player.lastName}`;
 }

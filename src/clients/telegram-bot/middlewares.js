@@ -4,9 +4,8 @@ const playerRepository = require('src/modules/player/repository');
 const { 
   replyTypes: { botCommand },
   propertyByReplyType,
-  wrongTextMessage,
 } = require('src/clients/telegram-bot/constants')
-const { invalidCommandErrorMessage  } = require('src/clients/telegram-bot/messages')
+const { invalidCommandErrorMessage, wrongTextMessage  } = require('src/clients/telegram-bot/messages')
 const utils = require('src/clients/telegram-bot/utils');
 const validation = require('src/clients/telegram-bot/validation')
 
@@ -14,6 +13,7 @@ module.exports = {
   playerIdentificationMiddleware,
   catchInvalidCommandMiddleware,
   manageReplyHistoryStack,
+  clearMessageHistoryStack,
   textValidationMiddleware,
 };
 
@@ -54,6 +54,16 @@ function catchInvalidCommandMiddleware(ctx, next) {
   next();
 }
 
+function clearMessageHistoryStack(ctx, next) {
+  const messageType = utils.getMessageType(ctx.message);
+
+  if (messageType === botCommand) {
+    ctx.session.messagesStack = []
+  }
+
+  next();
+}
+
 async function textValidationMiddleware(ctx, next) {
   const { messagesStack } = ctx.session;
   const { message: { text }} = ctx;
@@ -67,12 +77,12 @@ async function textValidationMiddleware(ctx, next) {
     return ctx.reply(wrongTextMessage);
   }
 
-  const validationHanlder = validation[commandValue];
+  const validationHanlder = validation[_.camelCase(commandValue)];
   
-  const result = await validationHanlder(text);
+  const result = await validationHanlder(text, ctx);
 
   if(result.error) {
-    return ctx.reply(wrongTextMessage);
+    return ctx.reply(result.error || wrongTextMessage);
   }
   ctx.state.command = commandValue;
   ctx.state.validationResult = result.value;

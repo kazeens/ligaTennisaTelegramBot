@@ -15,6 +15,16 @@ const tournamentsTypesMap = {
   DOUBLES_CHALLENGER: 'DOUBLES CHALLENGER',
   DOUBLES_MASTERS: 'DOUBLES MASTERS',
   DOUBLES_PRO: 'DOUBLES PRO',
+  FINAL_FUTURES: 'ИТОГОВЫЙ FUTURES',
+  FINAL_SATELLITE: 'ИТОГОВЫЙ SATELLITE',
+  FINAL_CHALLENGER: 'ИТОГОВЫЙ CHALLENGER',
+  FINAL_MASTERS: 'ИТОГОВЫЙ MASTERS',
+  FINAL_PRO: 'ИТОГОВЫЙ PRO',
+  FINAL_DOUBLES_SATELLITE: 'ИТОГОВЫЙ DOUBLES SATELLITE',
+  FINAL_DOUBLES_FUTURES: 'ИТОГОВЫЙ DOUBLES FUTURES',
+  FINAL_DOUBLES_CHALLENGER: 'ИТОГОВЫЙ DOUBLES CHALLENGER',
+  FINAL_DOUBLES_MASTERS: 'ИТОГОВЫЙ DOUBLES MASTERS',
+  FINAL_DOUBLES_PRO: 'ИТОГОВЫЙ DOUBLES PRO',
 }
 
 const tournamentsTypes = Object.values(tournamentsTypesMap);
@@ -34,7 +44,16 @@ const russianMonthToNumberMapper = {
   'декабря': 11,
 };
 
-const beforeDateSeparators = ['ДАТЫ:', 'СТАРТ:'];
+const beforeDateSeparatorsMap = {
+  DATES: 'ДАТЫ:',
+  START: 'СТАРТ:'
+}
+
+const whiteSpace = ' ';
+
+const defaultTournamentDaysDuration = 10;
+
+const beforeDateSeparators = Object.values(beforeDateSeparatorsMap);
 
 const russianMonth = Object.keys(russianMonthToNumberMapper);
 
@@ -44,4 +63,7 @@ module.exports = {
   russianMonthToNumberMapper,
   russianMonth,
   beforeDateSeparators,
+  beforeDateSeparatorsMap,
+  defaultTournamentDaysDuration,
+  whiteSpace,
 }

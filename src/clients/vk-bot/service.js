@@ -1,90 +1,56 @@
 
 const _ = require('lodash');
 const moment = require('moment');
+const Promise = require('bluebird');
+
+
 const VkApiService = require('src/services/vk');
+const tournamentRepository = require('src/modules/tournament/repository');
+
 const { 
   tournamentsTypes, tournamentsTypesMap,
   russianMonthToNumberMapper, russianMonth,
   beforeDateSeparators,
 } = require('src/modules/tournament/constants');
-
-const whiteSpace = ' ';
+const { 
+  getTournamentsDates,
+  parseTournamentTitle,
+} = require('src/clients/vk-bot/utils')
 
 module.exports = {
   getTournaments,
   getTournamentsPlayers,
-  setTournamentsPlayers,
 }
-
-function indexAfterWords(string, rawSeparators) {
-  const words = Array.isArray(rawSeparators) ? rawSeparators : [rawSeparators];
-
-  return words.map(word => {
-    const indexOfWord = string.indexOf(word);
-    const indexAfterWord = indexOfWord + word.length;
-    return indexOfWord < 0 ? indexOfWord : indexAfterWord;
-  })
-}
-
+// Пожалания ко времени игрока при записи
 async function getTournaments() {
   const { items } = await VkApiService.group.getTopics();
-  
-  const futureTournaments = items.filter(({title, created}) => {
-    const isTournamentsTopic = tournamentsTypes.find(tournament => title.includes(tournament));
-    const indexOfCharacterBeforeDateValue = indexAfterWords(title, beforeDateSeparators)
-    const dateString = title
-      .substring(indexOfCharacterBeforeDateValue)
-      .trim()
-    const amountOfMonthsInSentence = dateString
-      .split(whiteSpace)
-      .filter(word => russianMonth.find(word)).length;
-    if(amountOfMonthsInSentence > 1) {
-      /* Parse these kind of string
-      FUTURES 37 (турнир для игроков начинающего уровня) ДАТЫ: 26 ноября - 2 декабря
+  const currentDate = moment();
+
+  await Promise.each(items, async ({ title, id }) => {
+      const isTournamentsTopic = tournamentsTypes.find(tournament => title.includes(tournament));
+      if(!isTournamentsTopic) {
+        return;
+      }
+
+      const tournamentData = parseTournamentTitle(title);
+      const fullTournamentData = { topicId: id, ...tournamentData };
+
+      if(currentDate.isAfter(tournamentData.endDate)) {
+        return ;
+      }
+
+      /* Поиск уже существующего по name, number, year
+      * Если найдент обнови, если нет добавь
+      * Скачай участников из треда этого топика. Добавь в проперти participants
       */
-      const dayIndex = _.findIndex(dateString, (word, index) => {
-        const isPreviousSeparator = dateString[index-1] === ':';
+      const { name, number, startDate, endDate } = tournamentData;
+      const tournamentQuery = { name, number, startDate: startDate.toDate(), endDate: endDate.toDate() };
+      const tournament = await tournamentRepository.findOne(tournamentQuery);
 
-        return isPreviousSeparator;
-      });
-
-      const day = Number(dateString[dayIndex]);
-      const monthIndex = dayIndex + 1;
-      const month = russianMonthToNumberMapper[dateString[monthIndex]];
-
-      return { startDate: moment().set({month: month, date: day}) };
-    } 
-
-    
-    const [rawStartDate, rawEndDate] = dateString
-      .split('-')
-      .map(word => word.trim().split(' '))
-
-      const [rawStartDay, rawStartMonth] = rawStartDate;
-      const [rawEndDay, rawEndMonth] = rawEndDate;
-
-      const tournamentPeriod = {
-        startDate: moment().set({
-          month: russianMonthToNumberMapper[rawStartMonth],
-          date: rawStartDay,
-        }),
-        endDate: moment().set({
-          month: russianMonthToNumberMapper[rawEndMonth],
-          date: rawEndDay,
-        }),
-      };
-
-      return tournamentPeriod;
+      if(!tournament) {
+        await tournamentRepository.create(fullTournamentData);
+      }
   });
-
-
-}
-
-function getTournamentsStartDate() {
-
-}
-
-function getFutureTournaments() {
 
 }
 

@@ -3,6 +3,7 @@ const cron = require('node-cron');
 const config = require('src/config');
 const { cronJobExpression } = require('src/jobs/vk/constants');
 const VKApiService = require('src/services/vk');
+const vkHandlers = require('src/clients/vk-bot/service')
 
 // cron.schedule('*/5 * * * * *', function() {
 //   console.log('running a task every minute');
@@ -24,14 +25,14 @@ const VKApiService = require('src/services/vk');
 // });
 
 module.exports.init = function () {
-  cron.schedule('*/5 * * * * *', async function () {
-    let response;
-    try {
-      response = await VKApiService.group.getTopics();
-      console.log('response', response)
-    } catch (error) {
-      console.log('error', error)
+  // cron.schedule('*/5 * * * * *', async function () {
+  //   let response;
+  //   try {
+  //     response = await vkHandlers.getTournaments();
+  //     console.log('response', response)
+  //   } catch (error) {
+  //     console.log('error', error)
       
-    }
-  });
+  //   }
+  // });
 };

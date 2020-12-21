@@ -4,22 +4,19 @@ const mongoose = require('mongoose');
 const db = require('src/db');
 const { revertId } = require('src/utils/mongo.helper');
 
-const modelName = 'Tournaments';
+const modelName = 'Tournament';
 const collectionName = 'tournaments';
 
-const dateSchema = new mongoose.Schema({
-  start: { type: Date, required: true },
-  end:  { type: Date, required: true },
-});
-
-const  mongooseSchema = new mongoose.Schema(
+const mongooseSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
-        gridLimit: Number,
-        dates: {
-          type: dateSchema,
-          default: {},
-        },
+        number: { type: String, required: true },
+        description: { type: String },
+        participants: { type: Array, default: [] },
+        gridLimit: { type: Number },
+        startDate: { type: Date, required: true },
+        endDate:  { type: Date, required: true },
+        topicId: { type: Number },
     },
     {
         versionKey: 'version',
@@ -31,8 +28,8 @@ const  mongooseSchema = new mongoose.Schema(
     }
 );
 
-mongooseSchema.index({ intermediaryId: 1, name: 1 }, { unique: true });
+mongooseSchema.index({name: 1, number: 1, 'participants.id': 1}, { unique: true });
 
-const Tournaments = db.model(modelName, mongooseSchema, collectionName);
+const Tournament = db.model(modelName, mongooseSchema, collectionName);
 
-module.exports = Tournaments;
+module.exports = Tournament;

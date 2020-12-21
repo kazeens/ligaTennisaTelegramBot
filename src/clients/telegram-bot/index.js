@@ -3,16 +3,25 @@ const { TelegrafMongoSession } = require('telegraf-session-mongodb');
 
 const db = require('src/db');
 const config = require('src/config');
-const controller = require('src/clients/telegram-bot/controller');
+const commandsHandler = require('src/clients/telegram-bot/handlers/command');
+const textHandler = require('src/clients/telegram-bot/handlers/text');
+
 const mv = require('src/clients/telegram-bot/middlewares');
 const { 
   telegraf, commands,
   replyTypes,
 } = require('src/clients/telegram-bot/constants');
 
-
-function emptyMiddleware(ctx, next) {
-  next()
+const commandsHandlersMap = {
+  [commands.HELP]: commandsHandler.handleHelpMessage,
+  [commands.TOURNAMENTS]: commandsHandler.handleTournaments,
+  [commands.PLAY_TOURNAMENT]: commandsHandler.handlePlayTournament,
+  [commands.EXIT_TOURNAMENT]: commandsHandler.handleExitTournament,
+  [commands.SIGN_UP]: commandsHandler.handleSignUp,
+  [commands.SIGN_UP_EDIT]: commandsHandler.handleSignUpEdit,
+  [commands.SUBSCRIBE_SCHEDULE]: commandsHandler.handleScheduleSubscription,
+  [commands.UNSUBSCRIBE_SCHEDULE]: commandsHandler.handleScheduleUnsubscription,
+  [commands.REPORT_RESULTS]: commandsHandler.handleMatchReporting,
 }
 
 function configureTelegramBot() {
@@ -22,31 +31,23 @@ function configureTelegramBot() {
   bot.use((...args) => session.middleware(...args));
   bot.use(mv.playerIdentificationMiddleware);
   bot.use(mv.manageReplyHistoryStack);
-  // bot.use((ctx, next) => {
-  //   debugger
-  //   // ctx.session.commandsStack = !_.isEmpty(commandsStack) ? : ;
-  // })
-  bot.start(controller.handleHelpMessage);
-  bot.command(commands.HELP, controller.handleHelpMessage);
 
-  bot.command(commands.TOURNAMENTS, controller.handleTournaments); // Y
+  bot.start(commandsHandler.handleStartMessage);
+  bot.use(mv.clearMessageHistoryStack);
 
-  bot.command(commands.SIGN_UP, controller.handlePlayerSignUp); // Y
-  // bot.command(commands.SIGN_UP_EDIT, controller.handlePlayerSignUpEdit); // Y
-
-  // bot.command(commands.SUBSCRIBE_SCHEDULE, emptyMiddleware);
-  // bot.command(commands.UNSUBSCRIBE_SCHEDULE, emptyMiddleware);
-
-  // bot.command(commands.SEE_RESULTS, emptyMiddleware); // Y
-  // bot.command(commands.REPORT_RESULTS, emptyMiddleware);
+  registerCommandsHandlers(bot);
 
   bot.use(mv.catchInvalidCommandMiddleware);
-
   bot.use(mv.textValidationMiddleware);
 
-  bot.on(replyTypes.text, controller.handleTextInput);
+  bot.on(replyTypes.text, textHandler.handleTextInput);
 
   bot.launch();
+}
+
+function registerCommandsHandlers(bot) {
+  Object.keys(commandsHandlersMap)
+    .forEach(command => bot.command(command, commandsHandlersMap[command]))
 }
 
 module.exports.configure = configureTelegramBot;

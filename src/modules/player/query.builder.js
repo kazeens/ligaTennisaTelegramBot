@@ -6,10 +6,10 @@ module.exports = {
     buildQuery,
 };
 
-function buildQuery(query = {}) {
+function buildQuery(rawQuery = {}) {
     let result = {};
 
-    setIfExist(result, '_id', query.id);
+    setIfExist(result, '_id', rawQuery.id);
 
     return result;
 }
