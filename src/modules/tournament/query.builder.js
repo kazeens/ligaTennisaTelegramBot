@@ -13,7 +13,8 @@ function buildQuery(rawQuery = {}) {
     setIfExist(result, '_id', rawQuery.id);
     setIfExist(result, 'name', rawQuery.name);
     setIfExist(result, 'number', rawQuery.number);
-
+    setIfExist(result, 'topicId', rawQuery.topicId);
+    
     if(rawQuery.range) {
       if(rawQuery.range.from) {
         set(result, 'startDate.$gt', rawQuery.range.from);

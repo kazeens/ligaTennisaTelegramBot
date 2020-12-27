@@ -1,5 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
+const toCamelCase = require('camelcase-keys');
 
 const { 
   russianMonthToNumberMapper, russianMonth,
@@ -11,6 +12,8 @@ const {
 module.exports = {
   getTournamentsDates,
   parseTournamentTitle,
+  parseBoardComment,
+  getParticipantName,
 };
 
 function parseTournamentTitle(title) {
@@ -113,4 +116,19 @@ function indexAfterWords(string, rawSeparators) {
       return indexOfWord < 0 ? indexOfWord : indexAfterWord;
     })
     .find(index => index >= 0)
+}
+
+function parseBoardComment() {
+  
+}
+
+function getParticipantName(commentText, user) { // написать лучше!
+  const pureName = commentText.replace(/\+/g, '').trim()
+  if(_.isEmpty(pureName)) {
+    return toCamelCase(user);
+  }
+
+  const [lastName, firstName] = pureName.split(' ');
+
+  return { firstName, lastName };
 }

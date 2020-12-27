@@ -1,5 +1,6 @@
 
 const { VK } = require('vk-io');
+const toCamelCase = require('camelcase-keys');
 
 const config = require('src/config');
 
@@ -19,7 +20,7 @@ class VKService {
           console.log('error getPosts', error)
         }
 
-        return response;
+        return toCamelCase(response);
       },
       async getTopics(order = 1) {
         let response;
@@ -33,7 +34,7 @@ class VKService {
           console.log('error getTopics', error)
         }
 
-        return response;
+        return toCamelCase(response);
       }
     }
     this.topic = {
@@ -51,7 +52,7 @@ class VKService {
           console.log('error addComment', error)
         }
 
-        return response;
+        return toCamelCase(response);
       },
       async removeComment(topicId, commentId) {
         let response;
@@ -66,7 +67,7 @@ class VKService {
           console.log('error addComment', error)
         }
 
-        return response;
+        return toCamelCase(response);
       },
       async getComments(topicId) {
         const commentsDefaultMaxAmount = 100;
@@ -84,6 +85,22 @@ class VKService {
           })
         } catch (error) {
           console.log('error getComments', error)
+        }
+
+        return toCamelCase(response);
+      }
+    }
+    this.users = {
+      async getUser(id) {
+        const user_ids = `${id}`;
+
+        let response;
+
+        try {
+          [response] = await that.vk.api.users.get({user_ids})
+        } catch (error) {
+          logger.error(error);
+          return;
         }
 
         return response;

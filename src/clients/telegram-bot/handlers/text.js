@@ -26,7 +26,7 @@ async function signUpTextHanlder(ctx) {
   const telegramId = ctx.from.id;
   const playerData = { ...validatedData, telegramId };
   await playerRepository.create(playerData);
-  
+  // Найти его в текущих турнирах и расширить его объект в проперти participants
   return ctx.reply('Отлично, теперь мы знакомы ;)')
 }
 
@@ -35,6 +35,7 @@ async function signUpEditTextHandler(ctx) {
   const { player: { id } } = ctx.session;
 
   await playerRepository.update({id}, validatedData);
+  // Найти его в текущих турнирах и расширить его объект в проперти participants
 
   return ctx.reply('Все, я обновил твое имя');
 };

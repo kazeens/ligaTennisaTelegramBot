@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 
 const telegramBot = require('src/clients/telegram-bot');
 const logger = require('src/utils/logger')
-
+const vkBotController = require('src/clients/vk-bot/controller')
 const config = require('src/config');
 const jobs = require('src/jobs/vk'); // rethig in the future the structure
 const app = express();
@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 telegramBot.configure();
 jobs.init();
+
+app.post('/group-updates', vkBotController.handleGroupWebhook);
 
 app.listen(config.port, () => {
 

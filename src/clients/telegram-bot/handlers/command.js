@@ -115,7 +115,7 @@ function handleSignUp(ctx) {
 }
 
 function handleSignUpEdit(ctx) {
-  return ctx.reply('Введи свое новое имя :)');
+  return ctx.reply(signUpMessage);
 }
 
 function handleScheduleSubscription(ctx) {

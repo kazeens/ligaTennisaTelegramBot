@@ -82,7 +82,7 @@ async function textValidationMiddleware(ctx, next) {
   const result = await validationHanlder(text, ctx);
 
   if(result.error) {
-    return ctx.reply(result.error || wrongTextMessage);
+    return ctx.reply(_.get(result, 'error.message') || wrongTextMessage);
   }
   ctx.state.command = commandValue;
   ctx.state.validationResult = result.value;

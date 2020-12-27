@@ -16,7 +16,7 @@ function signUp(text) {
     firstName,
   };
 
-  return schemas.signUp.validate(data);
+  return schemas.signUp.validate(data);;
 }
 
 function signUpEdit(text) {
