@@ -24,6 +24,8 @@ const tournamentsTypesMap = {
 
 const tournamentsTypes = Object.values(tournamentsTypesMap);
 
+const tournamentCancelationNote = 'ТУРНИР НЕ СОСТОЯЛСЯ. ЗАПИСЬ ОТМЕНЕНА.';
+
 const russianMonthToNumberMapper = {
   'января': 0,
   'февраля': 1,
@@ -53,6 +55,7 @@ const beforeDateSeparators = Object.values(beforeDateSeparatorsMap);
 const russianMonth = Object.keys(russianMonthToNumberMapper);
 
 module.exports = {
+  tournamentCancelationNote,
   tournamentsTypesMap,
   tournamentsTypes,
   russianMonthToNumberMapper,

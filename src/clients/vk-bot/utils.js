@@ -8,19 +8,23 @@ const {
   defaultTournamentDaysDuration, whiteSpace
 } = require('src/modules/tournament/constants');
 
+const { getTournamentNameAndNumber } = require('src/modules/tournament/utils')
+
 
 module.exports = {
   getTournamentsDates,
   parseTournamentTitle,
   parseBoardComment,
   getParticipantName,
+  isParticipantWithInvalidName,
 };
 
 function parseTournamentTitle(title) {
-  const titleWords = title.split(' ');
-  const name = titleWords[0];
-  const number = titleWords[1];
-  const descriptionOpeningDelimeterIndex = title.indexOf('(') + 1;
+  const titleDescriptionSeparationIndex = title.indexOf('(');
+  const tournamentFullTitle = title.substring(0, titleDescriptionSeparationIndex).trim();
+  let { name, number } = getTournamentNameAndNumber(tournamentFullTitle);
+
+  const descriptionOpeningDelimeterIndex = titleDescriptionSeparationIndex + 1;
   const descriptoinClosingDelimeterIndex = title.indexOf(')');
 
   const description = title
@@ -123,12 +127,22 @@ function parseBoardComment() {
 }
 
 function getParticipantName(commentText, user) { // написать лучше!
+  const commentWordsAmount = commentText.trim().split(' ').length;
+  if(commentWordsAmount > 2) { // Плюс регулярка на проверку только букв кириллицы или латиницы
+    return null;
+  }
+
   const pureName = commentText.replace(/\+/g, '').trim()
+
   if(_.isEmpty(pureName)) {
-    return toCamelCase(user);
+    return toCamelCase(_.pick(user, ['firstName', 'lastName']));
   }
 
   const [lastName, firstName] = pureName.split(' ');
 
   return { firstName, lastName };
+}
+
+function isParticipantWithInvalidName(participant) {
+  return Boolean(Object.keys(participant).filter(key => !Boolean(participant[key])).length)
 }

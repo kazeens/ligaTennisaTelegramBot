@@ -7,6 +7,7 @@ const groupEventsHandlerMap = {
   [groupEventsMap.BOARD_POST_NEW]: service.handleBoardNewPostEvent,
   [groupEventsMap.BOARD_POST_EDIT]: service.handleBoardPostEditEvent,
   [groupEventsMap.BOARD_POST_DELETE]: service.handleBoardPostDeleteEvent,
+  [groupEventsMap.BOARD_POST_RESTORE]: service.handleBoardNewPostEvent,
 }
 
 module.exports = {
@@ -14,6 +15,7 @@ module.exports = {
 }
 
 async function handleGroupWebhook(req, res) {
+  // return res.status(200).send('ok');    // Required by VK
 
   // return res.status(200).send('14f03838');
   const { body: eventData } = req;

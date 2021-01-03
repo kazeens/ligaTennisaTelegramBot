@@ -1,6 +1,8 @@
 
 const schemas = require('src/clients/telegram-bot/validation/schemas')
 const tournamentRepository = require('src/modules/tournament/repository');
+const { getTournamentNameAndNumber } = require('src/modules/tournament/utils')
+
 
 module.exports = {
   signUp,
@@ -24,7 +26,7 @@ function signUpEdit(text) {
 }
 
 async function playTournament(text, ctx) {
-  const [name, number] = text.split(' ');
+  const { name, number } = getTournamentNameAndNumber(text);
   const query = {name, number};
   const tournament = await tournamentRepository.findOne(query);
 
@@ -47,8 +49,8 @@ async function playTournament(text, ctx) {
 }
 
 async function exitTournament(text, ctx) {
-  const [name, number] = text.split(' ');
-  const query = {name, number};
+  const { name, number } = getTournamentNameAndNumber(text);
+  const query = { name, number };
   const tournament = await tournamentRepository.findOne(query);
 
   if(!tournament) {

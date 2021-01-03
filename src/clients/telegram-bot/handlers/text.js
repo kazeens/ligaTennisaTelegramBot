@@ -46,15 +46,9 @@ async function tournamentParticipationTextHanlder(ctx) {
   const query = { id: tournament.id };
   const playerName = getPlayerName(player);
 
-  try {
-    const topicCommentId = await VkApiService.topic.addComment(tournament.topicId, playerName);
-    const data = {topicCommentId, ...player}
-    await tournamentRepository.addParticipant(query, data);
-
-  } catch (error) {
-    logger.error(error);
-    return;
-  }
+  const topicCommentId = await VkApiService.topic.addComment(tournament.topicId, playerName);
+  const data = {topicCommentId, ...player}
+  await tournamentRepository.addParticipant(query, data);
 
   return ctx.reply('Все, записал!')
 }

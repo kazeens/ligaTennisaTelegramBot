@@ -8,6 +8,7 @@ module.exports = {
     update,
     addParticipant,
     removeParticipant,
+    cancelTournament,
 };
 
 function getAll(query) {
@@ -33,7 +34,7 @@ function create(data) {
 function update(id, data) {
     return Tournament
         .findOneAndUpdate(buildQuery({ id }), data)
-        .then(() => findOne(buildQuery({ id }), scope));
+        .then(() => findOne(buildQuery({ id })));
 }
 
 function addParticipant(query, player) {
@@ -42,9 +43,15 @@ function addParticipant(query, player) {
         .then(() => findOne(buildQuery(query)));
 }
 
-function removeParticipant(query, playerId) {
+function removeParticipant(query, participantQuery) {
     return Tournament
-        .update(buildQuery(query), { $pull: { participants: {id: playerId }}})
+        .update(buildQuery(query), { $pull: { participants: participantQuery }})
+        .then(() => findOne(buildQuery(query)));
+}
+
+function cancelTournament(query) {
+    return Tournament
+        .update(buildQuery(query), { $set: { isCancelled: true }})
         .then(() => findOne(buildQuery(query)));
 }
 

@@ -10,6 +10,7 @@ function buildQuery(rawQuery = {}) {
     let result = {};
 
     setIfExist(result, '_id', rawQuery.id);
+    setIfExist(result, 'telegramId', rawQuery.telegramId);
     setIfExist(result, 'firstName', rawQuery.firstName);
     setIfExist(result, 'lastName', rawQuery.lastName);
 

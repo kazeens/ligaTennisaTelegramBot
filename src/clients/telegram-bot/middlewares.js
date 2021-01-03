@@ -13,7 +13,7 @@ module.exports = {
   playerIdentificationMiddleware,
   catchInvalidCommandMiddleware,
   manageReplyHistoryStack,
-  clearMessageHistoryStack,
+  clearPreviousCommandMessageHistoryStack,
   textValidationMiddleware,
 };
 
@@ -54,11 +54,11 @@ function catchInvalidCommandMiddleware(ctx, next) {
   next();
 }
 
-function clearMessageHistoryStack(ctx, next) {
+function clearPreviousCommandMessageHistoryStack(ctx, next) {
   const messageType = utils.getMessageType(ctx.message);
 
   if (messageType === botCommand) {
-    ctx.session.messagesStack = []
+    ctx.session.messagesStack = [];
   }
 
   next();
@@ -82,7 +82,7 @@ async function textValidationMiddleware(ctx, next) {
   const result = await validationHanlder(text, ctx);
 
   if(result.error) {
-    return ctx.reply(_.get(result, 'error.message') || wrongTextMessage);
+    return ctx.reply(_.get(result, 'error.message') || _.get(result, 'error') || wrongTextMessage);
   }
   ctx.state.command = commandValue;
   ctx.state.validationResult = result.value;

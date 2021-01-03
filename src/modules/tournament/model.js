@@ -17,6 +17,7 @@ const mongooseSchema = new mongoose.Schema(
         startDate: { type: Date, required: true },
         endDate:  { type: Date, required: true },
         topicId: { type: Number },
+        isCancelled: { type: Boolean, default: false },
     },
     {
         versionKey: 'version',

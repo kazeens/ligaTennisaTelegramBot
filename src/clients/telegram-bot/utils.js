@@ -22,5 +22,5 @@ function getMessageType(message) {
 }
 
 function getPlayerName(player) {
-  return `${player.firstName} ${player.lastName}`;
+  return `${player.lastName} ${player.firstName}`;
 }

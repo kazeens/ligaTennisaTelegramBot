@@ -1,7 +1,6 @@
 
 const {
   getTournaments,
-  getTournamentsPlayers,
   setTournamentsPlayers,
 } = require('src/clients/vk-bot/service');
 

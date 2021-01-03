@@ -25,7 +25,7 @@ const vkHandlers = require('src/clients/vk-bot/service')
 // });
 
 module.exports.init = function () {
-  // cron.schedule('*/5 * * * * *', async function () {
+  cron.schedule('*/5 * * * * *', async function () {
   //   let response;
   //   try {
   //     response = await vkHandlers.getTournaments();
@@ -34,5 +34,5 @@ module.exports.init = function () {
   //     console.log('error', error)
       
   //   }
-  // });
+  });
 };

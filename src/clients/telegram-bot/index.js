@@ -30,10 +30,10 @@ function configureTelegramBot() {
 
   bot.use((...args) => session.middleware(...args));
   bot.use(mv.playerIdentificationMiddleware);
+  bot.use(mv.clearPreviousCommandMessageHistoryStack);
   bot.use(mv.manageReplyHistoryStack);
 
   bot.start(commandsHandler.handleStartMessage);
-  bot.use(mv.clearMessageHistoryStack);
 
   registerCommandsHandlers(bot);
 

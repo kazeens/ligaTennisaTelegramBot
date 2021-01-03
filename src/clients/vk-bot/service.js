@@ -7,21 +7,18 @@ const VkApiService = require('src/services/vk');
 const tournamentRepository = require('src/modules/tournament/repository');
 const playerRepository = require('src/modules/player/repository')
 
-const { getPlayerName } = require('src/clients/telegram-bot/utils');
-
 const { 
-  tournamentsTypes
+  tournamentsTypes,
+  tournamentCancelationNote,
 } = require('src/modules/tournament/constants');
 const { 
-  getTournamentsDates,
   parseTournamentTitle,
   getParticipantName,
 } = require('src/clients/vk-bot/utils')
 
 module.exports = {
   getTournaments,
-  getTournamentsPlayers,
-  handleWallNewPostEvent,
+  // handleWallNewPostEvent,
   handleBoardNewPostEvent,
   handleBoardPostEditEvent,
   handleBoardPostDeleteEvent,
@@ -59,55 +56,96 @@ async function getTournaments() {
 
 }
 
-async function getTournamentsPlayers() {
+// async function handleWallNewPostEvent(params) {
   
-}
-
-async function setTournamentsPlayers() {
-  
-}
-
-async function handleWallNewPostEvent(params) {
-  
-}
-
+// }
 
 async function handleBoardNewPostEvent(eventData) {
   const { object: {topic_id, from_id, text, id } } = eventData;
+  const isCancelledText = text === tournamentCancelationNote;
+
+  if(isCancelledText) {
+    // Notify participants in telegram
+    return tournamentRepository.cancelTournament({topicId: topic_id});
+  }
+
+  const tournament = await tournamentRepository.findOne({topicId: topic_id});
+
+  const isAlreadyInTournament = tournament && tournament.participants
+    .find(({ topicCommentId }) => topicCommentId === id);
+
+  const participant = await getParicipantNameData(text, from_id);
+
+  if(!tournament || isAlreadyInTournament || !participant) {
+    return;
+  }
+
+  const playerTournamentData = await makeUpPlayerNewData(participant, id);
+
+  const tournamentQuery = {id: tournament.id};
+  await tournamentRepository.addParticipant(tournamentQuery, playerTournamentData); 
+}
+
+async function handleBoardPostEditEvent(eventData) {
+  const { object: {topic_id, from_id, text, id: commentId } } = eventData;
+
+  if(isCancelledText) {
+    // Notify participants in telegram
+    return tournamentRepository.cancelTournament({topicId: topic_id});
+  }
+
+  const tournament = await tournamentRepository.findOne({topicId: topic_id});
+
+  const participant = await getParicipantNameData(text, from_id);
+
+  if(!tournament || !participant) {
+    return;
+  }
+
+  if(text === tournamentCancelationNote) { 
+    return tournamentRepository.cancelTournament({topicId: topic_id});
+    // Notify participants in telegram
+  }
+
+  const previousPlayerParticipantQuery = { topicCommentId: id };
+  const tournamentQuery = { id: tournament.id };
+  await tournamentRepository.removeParticipant(tournamentQuery, previousPlayerParticipantQuery);
+
+  const playerTournamentData = await makeUpPlayerNewData(participant, commentId);
+
+  await tournamentRepository.addParticipant(tournamentQuery, playerTournamentData); 
+}
+
+async function handleBoardPostDeleteEvent(eventData) {
+  const { object: { topic_id, id } } = eventData;
   const tournament = await tournamentRepository.findOne({topicId: topic_id});
 
   if(!tournament) {
     return;
   }
 
-  // Если пользуетесь телеграм ботом Лиги Тенниса и хотите, чтобы ваша заявка была синхронизирована с ним, введите полностью свою Фамилию и Имя
-  // Можно также оставлять + , при условии что ваши имя и фамилия вконтакте, совпадают с тем как вы представились боту
-  const user = await VkApiService.users.getUser(from_id);
+  const tournamentQuery = { id: tournament.id };
+  const previousPlayerParticipation = { topicCommentId: id };
+  await tournamentRepository.removeParticipant(tournamentQuery, previousPlayerParticipation);
+}
 
-  const tournamentQuery = {id: tournament.id};
+
+async function getParicipantNameData(text, sourceUserId) {
+  const user = await VkApiService.users.getUser(sourceUserId);
   const participant = getParticipantName(text, user);
-  const playerQuery = _.pick(participant, ['firstName', 'lastName']);
-  let playerTournamentData = {
-    topicCommentId: id,
-  };
-  const existingPlayer = await playerRepository.findOne(playerQuery);
+
+  return participant;
+}
+
+async function makeUpPlayerNewData(participant, id) {
+  const existingPlayer = await playerRepository.findOne(participant);
+  let playerTournamentData = { topicCommentId: id};
+
   if(existingPlayer) {
     playerTournamentData = {...playerTournamentData, ...existingPlayer};
   } else {
     playerTournamentData = {...playerTournamentData, ...participant}
   }
 
-  await tournamentRepository
-    .addParticipant(tournamentQuery, playerTournamentData);
-  
-  logger.log(eventData)
-}
-
-async function handleBoardPostEditEvent(eventData) {
-  const { object: {topic_id, from_id, text, id } } = eventData;
-  debugger
-}
-
-async function handleBoardPostDeleteEvent(params) {
-  
+  return playerTournamentData;
 }
